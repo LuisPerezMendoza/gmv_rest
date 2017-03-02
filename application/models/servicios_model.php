@@ -29,16 +29,16 @@ class servicios_model extends CI_Model
         $rtnCliente=array();
         $query = $this->sqlsrv->fetchArray("SELECT * FROM GMV_ClientesPerMora WHERE VENDEDOR='".$Cliente."'",SQLSRV_FETCH_ASSOC);
         foreach($query as $key){
-            $rtnCliente['results'][$i]['CLIENTE']      = $key['CLIENTE'];
-            $rtnCliente['results'][$i]['NOMBRE']       = $key['NOMBRE'];
-            $rtnCliente['results'][$i]['NoVencidos']   = number_format($key['NoVencidos'],2,'.','');
-            $rtnCliente['results'][$i]['Dias30']       = number_format($key['Dias30'],2,'.','');
-            $rtnCliente['results'][$i]['Dias60']       = number_format($key['Dias60'],2,'.','');
-            $rtnCliente['results'][$i]['Dias90']       = number_format($key['Dias90'],2,'.','');
-            $rtnCliente['results'][$i]['Dias120']      = number_format($key['Dias120'],2,'.','');
-            $rtnCliente['results'][$i]['Mas120']       = number_format($key['Mas120'],2,'.','');
-            $rtnCliente['results'][$i]['SALDO']        = number_format($key['SALDO'],2, '.', '');
-            $rtnCliente['results'][$i]['LIMITE']       = number_format($key['LIMITE_CREDITO'],2, '.', '');
+            $rtnCliente['results'][$i]['mCliente']      = $key['CLIENTE'];
+            $rtnCliente['results'][$i]['mNombre']       = $key['NOMBRE'];
+            $rtnCliente['results'][$i]['mVencidos']   = number_format($key['NoVencidos'],2,'.','');
+            $rtnCliente['results'][$i]['mD30']       = number_format($key['Dias30'],2,'.','');
+            $rtnCliente['results'][$i]['mD60']       = number_format($key['Dias60'],2,'.','');
+            $rtnCliente['results'][$i]['mD90']       = number_format($key['Dias90'],2,'.','');
+            $rtnCliente['results'][$i]['mD120']      = number_format($key['Dias120'],2,'.','');
+            $rtnCliente['results'][$i]['mMd120']       = number_format($key['Mas120'],2,'.','');
+            $rtnCliente['results'][$i]['mSaldo']        = number_format($key['SALDO'],2, '.', '');
+            $rtnCliente['results'][$i]['mLimite']       = number_format($key['LIMITE_CREDITO'],2, '.', '');
             $i++;
         }
         echo json_encode($rtnCliente);

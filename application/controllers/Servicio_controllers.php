@@ -13,6 +13,6 @@ class Servicio_controllers extends CI_Controller {
 	}
 	public function ClientesMora()
 	{
-		$this->servicios_model->ClienteMora("F06");
+		$this->servicios_model->ClienteMora("F09");
 	}
 }
