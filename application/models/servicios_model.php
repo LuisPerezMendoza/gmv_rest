@@ -23,11 +23,29 @@ class servicios_model extends CI_Model
         echo json_encode($rtnArticulo);
         $this->sqlsrv->close();
     }
-    public function ClienteMora($Cliente)
+    public function Clientes($Vendedor)
     {
         $i=0;
         $rtnCliente=array();
-        $query = $this->sqlsrv->fetchArray("SELECT * FROM GMV_ClientesPerMora WHERE VENDEDOR='".$Cliente."'",SQLSRV_FETCH_ASSOC);
+        $query = $this->sqlsrv->fetchArray("SELECT * FROM vtVS2_Clientes WHERE VENDEDOR='".$Vendedor."'",SQLSRV_FETCH_ASSOC);
+        foreach($query as $key){
+            $rtnCliente['results'][$i]['mCliente']      = $key['CLIENTE'];
+            $rtnCliente['results'][$i]['mNombre']       = $key['NOMBRE'];
+            $rtnCliente['results'][$i]['mDireccion']    = $key['DIRECCION'];
+            $rtnCliente['results'][$i]['mRuc']          = $key['RUC'];
+            $rtnCliente['results'][$i]['mPuntos']       = $key['RUBRO1_CLI'];
+            $rtnCliente['results'][$i]['mMoroso']       = $key['MOROSO'];
+
+            $i++;
+        }
+        echo json_encode($rtnCliente);
+        $this->sqlsrv->close();
+    }
+    public function ClienteMora($Vendedor)
+    {
+        $i=0;
+        $rtnCliente=array();
+        $query = $this->sqlsrv->fetchArray("SELECT * FROM GMV_ClientesPerMora WHERE VENDEDOR='".$Vendedor."'",SQLSRV_FETCH_ASSOC);
         foreach($query as $key){
             $rtnCliente['results'][$i]['mCliente']      = $key['CLIENTE'];
             $rtnCliente['results'][$i]['mNombre']       = $key['NOMBRE'];
@@ -39,6 +57,26 @@ class servicios_model extends CI_Model
             $rtnCliente['results'][$i]['mMd120']       = number_format($key['Mas120'],2,'.','');
             $rtnCliente['results'][$i]['mSaldo']        = number_format($key['SALDO'],2, '.', '');
             $rtnCliente['results'][$i]['mLimite']       = number_format($key['LIMITE_CREDITO'],2, '.', '');
+            $i++;
+        }
+        echo json_encode($rtnCliente);
+        $this->sqlsrv->close();
+    }
+    public function ClienteIndicadores($Vendedor)
+    {
+        $i=0;
+        $rtnCliente=array();
+        $query = $this->sqlsrv->fetchArray("SELECT * FROM GMV_indicadores_clientes WHERE VENDEDOR='".$Vendedor."'",SQLSRV_FETCH_ASSOC);
+        foreach($query as $key){
+            $rtnCliente['results'][$i]['mCliente']           = $key['CLIENTE'];
+            $rtnCliente['results'][$i]['mNombre']           = $key['NombreCliente'];
+            $rtnCliente['results'][$i]['mVendedor']           = $key['VENDEDOR'];
+            $rtnCliente['results'][$i]['mMetas']             = number_format($key['MetaVentaEnValores'],2,'.','');
+            $rtnCliente['results'][$i]['mVentasActual']      = number_format($key['VentaEnValoresAct'],2,'.','');
+            $rtnCliente['results'][$i]['mPromedioVenta3M']   = number_format($key['VentaEnValores3MAnt'],2,'.','');
+            $rtnCliente['results'][$i]['mCantidadItems3M']   = number_format($key['NumItemFac3MAnt'],2,'.','');
+            $rtnCliente['results'][$i]['mCredito']           = number_format($key['DISPONIBLE'],2,'.','');
+            $rtnCliente['results'][$i]['mLimite']            = number_format($key['LIMITE_CREDITO'],2,'.','');
             $i++;
         }
         echo json_encode($rtnCliente);
