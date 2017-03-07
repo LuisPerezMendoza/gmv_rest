@@ -23,4 +23,8 @@ class Servicio_controllers extends CI_Controller {
 	{
 		$this->servicios_model->Clientes("F09");
 	}
+	public function Puntos()
+	{
+		$this->servicios_model->Puntos("F09");
+	}
 }

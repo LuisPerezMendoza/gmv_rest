@@ -82,6 +82,38 @@ class servicios_model extends CI_Model
         echo json_encode($rtnCliente);
         $this->sqlsrv->close();
     }
+    public function Puntos($Vendedor)
+    {
+        $i=0;
+        $rtnCliente=array();
+        $query = $this->sqlsrv->fetchArray("SELECT CLIENTE,CONVERT(VARCHAR(50),FECHA,110) AS FECHA,FACTURA,SUM(TT_PUNTOS) AS TOTAL,RUTA FROM vtVS2_Facturas_CL WHERE RUTA = '".$Vendedor."'
+                        GROUP BY FACTURA,FECHA,RUTA,CLIENTE",SQLSRV_FETCH_ASSOC);
+        foreach($query as $key){
+            $Remanente = number_format($this->FacturaSaldo($key['FACTURA'],$key['TOTAL']),2,'.','');
+            if (intval($Remanente) > 0.00 ) {
+                $rtnCliente['results'][$i]['mFecha']            = $key['FECHA'];
+                $rtnCliente['results'][$i]['mCliente']            = $key['CLIENTE'];
+                $rtnCliente['results'][$i]['mFactura']          = $key['FACTURA'];
+                $rtnCliente['results'][$i]['mPuntos']           = number_format($key['TOTAL'],2,'.','');
+                $rtnCliente['results'][$i]['mRemanente']        = $Remanente;
+                $i++;
+            }
+            
+        }
+        echo json_encode($rtnCliente);
+        $this->sqlsrv->close();
+    }
+    public function FacturaSaldo($id,$pts){        
+        $this->db->where('Factura',$id);
+        $this->db->select('Puntos');
+        $query = $this->db->get('rfactura');
+        if($query->num_rows() > 0){
+            $parcial = $query->result_array()[0]['Puntos'];
+        } else {
+            $parcial = $pts;
+        }
+        return $parcial;
+    }
 
 }
 ?>

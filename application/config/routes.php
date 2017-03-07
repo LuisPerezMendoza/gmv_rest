@@ -54,5 +54,6 @@ $route['ARTICULOS'] = 'Servicio_controllers/articulos';
 $route['ClientesMora'] = 'Servicio_controllers/ClientesMora';
 $route['ClientesIndicadores'] = 'Servicio_controllers/ClientesIndicadores';
 $route['Clientes'] = 'Servicio_controllers/Clientes';
+$route['Puntos'] = 'Servicio_controllers/Puntos';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
