@@ -114,6 +114,24 @@ class servicios_model extends CI_Model
         }
         return $parcial;
     }
+    public function LoginUsuario($usuario,$pass){
+        $i=0;
+        $rtnUsuario = array();
+        $this->db->where('Usuario',$usuario);
+        $this->db->where('Password',$pass);
+        $query = $this->db->get('Usuario');
+        if ($query->num_rows()>0) {
+            foreach ($query->result_array() as $key ) {
+                $rtnUsuario['results'][$i]['mUsuario'] = $key['Usuario'];
+                $rtnUsuario['results'][$i]['mNombre'] = $key['Nombre'];
+                $rtnUsuario['results'][$i]['mIdUser'] = $key['IdUser'];                
+            }
+            echo json_encode($rtnUsuario);
+        }else{
+            echo json_encode($rtnUsuario);
+        }
+        
+    }
 
 }
 ?>
