@@ -27,4 +27,8 @@ class Servicio_controllers extends CI_Controller {
 	{
 		$this->servicios_model->Puntos("F09");
 	}
+	public function LoginUsuario()
+	{
+		$this->servicios_model->LoginUsuario($_POST['usuario'],$_POST['pass']);
+	}
 }
