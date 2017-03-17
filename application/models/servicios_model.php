@@ -132,6 +132,20 @@ class servicios_model extends CI_Model
         }
         
     }
+    public function InsertCobros($json){
+        foreach(json_decode($json, true) as $key){
+            $Cobros = array(
+                'IDCOBRO'     => $key['mIdCobro'],
+                'CLIENTE'     => $key['mCliente'],
+                'RUTA'        => $key['mRuta'],
+                'TIPO'        => $key['mTipo'],
+                'IMPORTE'        => $key['mImporte'],
+                'OBSERVACION' => $key['mObservacion'],
+                'FECHA'       => $key['mFecha']);
+           $query = $this->db->insert('cobros', $Cobros);
+        }
+        echo json_encode($query);
+    }
 
 }
 ?>
