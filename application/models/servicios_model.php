@@ -123,13 +123,18 @@ class servicios_model extends CI_Model
 
         $result = mysql_query($query) or die('Consulta fallida: '.mysql_error());
         $key = mysql_fetch_array($result, MYSQL_ASSOC);
-
+            
         if (count($key)>1) {
             $rtnUsuario['results'][$i]['mUsuario'] = $key['Usuario'];
             $rtnUsuario['results'][$i]['mNombre'] = $key['Nombre'];
             $rtnUsuario['results'][$i]['mIdUser'] = $key['IdUser']; 
         }
             echo json_encode($rtnUsuario);        
+    }
+    public function url_pedidos($Data)
+    {
+        $arrayName = array('IDPEDIDO' => $Data->mIdPedido);
+        $this->db->insert('PEDIDO',$arrayName);
     }
 
 }
