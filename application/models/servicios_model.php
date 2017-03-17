@@ -117,20 +117,19 @@ class servicios_model extends CI_Model
     public function LoginUsuario($usuario,$pass){
         $i=0;
         $rtnUsuario = array();
-        $this->db->where('Usuario',$usuario);
-        $this->db->where('Password',$pass);
-        $query = $this->db->get('Usuario');
-        if ($query->num_rows()>0) {
-            foreach ($query->result_array() as $key ) {
-                $rtnUsuario['results'][$i]['mUsuario'] = $key['Usuario'];
-                $rtnUsuario['results'][$i]['mNombre'] = $key['Nombre'];
-                $rtnUsuario['results'][$i]['mIdUser'] = $key['IdUser'];                
-            }
-            echo json_encode($rtnUsuario);
-        }else{
-            echo json_encode($rtnUsuario);
+        $link = @mysql_connect('localhost', 'root', 'a7m1425.')or die('No se pudo conectar: ' . mysql_error());            
+        mysql_select_db('gmv') or die('No se pudo seleccionar la base de datos');
+        $query = "SELECT * FROM usuario WHERE Usuario = '".$usuario."' AND Password = '".$pass."'";
+
+        $result = mysql_query($query) or die('Consulta fallida: '.mysql_error());
+        $key = mysql_fetch_array($result, MYSQL_ASSOC);
+
+        if (count($key)>1) {
+            $rtnUsuario['results'][$i]['mUsuario'] = $key['Usuario'];
+            $rtnUsuario['results'][$i]['mNombre'] = $key['Nombre'];
+            $rtnUsuario['results'][$i]['mIdUser'] = $key['IdUser']; 
         }
-        
+            echo json_encode($rtnUsuario);        
     }
     public function InsertCobros($json){
         foreach(json_decode($json, true) as $key){
