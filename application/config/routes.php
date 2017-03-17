@@ -8,6 +8,7 @@ $route['ClientesMora'] = 'Servicio_controllers/ClientesMora';
 $route['ClientesIndicadores'] = 'Servicio_controllers/ClientesIndicadores';
 $route['Clientes'] = 'Servicio_controllers/Clientes';
 $route['Puntos'] = 'Servicio_controllers/Puntos';
+$route['InsertCobros'] = 'Servicio_controllers/InsertCobros';
 $route['Login'] = 'Servicio_controllers/LoginUsuario';
 $route['url_pedidos'] = 'Servicio_controllers/url_pedidos';
 
