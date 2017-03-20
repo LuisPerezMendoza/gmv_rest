@@ -123,7 +123,7 @@ class servicios_model extends CI_Model
 
         $result = mysql_query($query) or die('Consulta fallida: '.mysql_error());
         $key = mysql_fetch_array($result, MYSQL_ASSOC);
-
+            
         if (count($key)>1) {
             $rtnUsuario['results'][$i]['mUsuario'] = $key['Usuario'];
             $rtnUsuario['results'][$i]['mNombre'] = $key['Nombre'];
@@ -131,7 +131,7 @@ class servicios_model extends CI_Model
         }
             echo json_encode($rtnUsuario);        
     }
-    public function InsertCobros($json){
+  public function InsertCobros($json){
         foreach(json_decode($json, true) as $key){
             $Cobros = array(
                 'IDCOBRO'     => $key['mIdCobro'],
@@ -146,5 +146,11 @@ class servicios_model extends CI_Model
         echo json_encode($query);
     }
 
-}
+    public function url_pedidos($Data)
+    {
+        $arrayName = array('IDPEDIDO' => $Data->mIdPedido);
+        $this->db->insert('PEDIDO',$arrayName);
+
+    
+}}
 ?>
