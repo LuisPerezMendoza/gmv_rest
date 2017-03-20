@@ -148,9 +148,39 @@ class servicios_model extends CI_Model
 
     public function url_pedidos($Data)
     {
-        $arrayName = array('IDPEDIDO' => $Data->mIdPedido);
-        $this->db->insert('PEDIDO',$arrayName);
+        $i = 0;
+        $rtnUsuario = array();
+        foreach(json_decode($Data, true) as $key){
 
-    
-}}
+            $this->db->delete('PEDIDO', array('IDPEDIDO' => $key['mIdPedido']));
+            $this->db->delete('PEDIDO_DETALLE', array('IDPEDIDO' => $key['mIdPedido']));
+            
+            $query = $this->db->query('CALL SP_pedidos ("'.$key['mIdPedido'].'","'.$key['mVendedor'].'","'.$key['mCliente'].'",
+                                        "'.$key['mNombre'].'","'.$key['mFecha'].'","'.$key['mPrecio'].'","'.$key['mEstado'].'")');
+
+            for ($e=0; $e <(count($key['detalles']['nameValuePairs']))/6; $e++){
+                /*$detalles = array(
+                    'IDPEDIDO' => $key['detalles']['nameValuePairs']['ID'.$i],
+                    'ARTICULO' => $key['detalles']['nameValuePairs']['ARTICULO'.$i],
+                    'DESCRIPCION' => $key['detalles']['nameValuePairs']['DESC'.$i],
+                    'CANTIDAD' => $key['detalles']['nameValuePairs']['CANT'.$i],
+                    'TOTAL' => $key['detalles']['nameValuePairs']['TOTAL'.$i],
+                    'BONIFICADO' => $key['detalles']['nameValuePairs']['BONI'.$i]
+                );*/
+                $query2 = $this->db->query('CALL SP_Detalle_pedidos 
+                            ("'.$key['detalles']['nameValuePairs']['ID'.$i].'","'.$key['detalles']['nameValuePairs']['ARTICULO'.$i].'"
+                            ,"'.$key['detalles']['nameValuePairs']['DESC'.$i].'","'.$key['detalles']['nameValuePairs']['CANT'.$i].'"
+                            ,"'.$key['detalles']['nameValuePairs']['TOTAL'.$i].'","'.$key['detalles']['nameValuePairs']['BONI'.$i].'")');
+                $i++;
+                //$query2 = $this->db->insert('PEDIDO_DETALLE',$detalles);
+            }
+        }
+        if ($query && $query2){
+            $rtnUsuario['results'][0]['mIdPedido'] = "1";
+        }else{
+            $rtnUsuario['results'][0]['mIdPedido'] = 0;
+        }
+        echo json_encode($rtnUsuario);
+    }    
+}
 ?>
