@@ -106,7 +106,7 @@ class servicios_model extends CI_Model
     public function FacturaSaldo($id,$pts){        
         $this->db->where('Factura',$id);
         $this->db->select('Puntos');
-        $query = $this->db->get('rfactura');
+        $query = $this->db->get('visys.rfactura');
         if($query->num_rows() > 0){
             $parcial = $query->result_array()[0]['Puntos'];
         } else {
@@ -117,7 +117,7 @@ class servicios_model extends CI_Model
     public function LoginUsuario($usuario,$pass){
         $i=0;
         $rtnUsuario = array();
-        $link = @mysql_connect('localhost', 'root', 'a7m1425.')or die('No se pudo conectar: ' . mysql_error());            
+        $link = @mysql_connect('192.168.1.64:3306', 'Dios', 'a7m1425.')or die('No se pudo conectar: ' . mysql_error());
         mysql_select_db('gmv') or die('No se pudo seleccionar la base de datos');
         $query = "SELECT * FROM usuario WHERE Usuario = '".$usuario."' AND Password = '".$pass."'";
 
