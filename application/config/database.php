@@ -7,8 +7,8 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '192.168.1.64:3306',
-	'username' => 'Dios',
+	'hostname' => 'localhost',
+	'username' => 'root',
 	'password' => 'a7m1425.',
 	'database' => 'gmv',
 	'dbdriver' => 'mysqli',
