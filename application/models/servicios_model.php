@@ -27,7 +27,7 @@ class servicios_model extends CI_Model
     {
         $i=0;
         $rtnCliente=array();
-        $query = $this->sqlsrv->fetchArray("SELECT * FROM vtVS2_Clientes WHERE VENDEDOR='".$Vendedor."'",SQLSRV_FETCH_ASSOC);
+        $query = $this->sqlsrv->fetchArray("SELECT * FROM GMV_Clientes WHERE VENDEDOR='".$Vendedor."'",SQLSRV_FETCH_ASSOC);
         foreach($query as $key){
             $rtnCliente['results'][$i]['mCliente']      = $key['CLIENTE'];
             $rtnCliente['results'][$i]['mNombre']       = $key['NOMBRE'];
@@ -35,7 +35,9 @@ class servicios_model extends CI_Model
             $rtnCliente['results'][$i]['mRuc']          = $key['RUC'];
             $rtnCliente['results'][$i]['mPuntos']       = $key['RUBRO1_CLI'];
             $rtnCliente['results'][$i]['mMoroso']       = $key['MOROSO'];
-
+            $rtnCliente['results'][$i]['mCredito']      = number_format($key['CREDITO'],2, '.', '');
+            $rtnCliente['results'][$i]['mSaldo']        = number_format($key['SALDO'],2, '.', '');
+            $rtnCliente['results'][$i]['mDisponible']   = number_format($key['DISPONIBLE'],2, '.', '');
             $i++;
         }
         echo json_encode($rtnCliente);
@@ -55,8 +57,6 @@ class servicios_model extends CI_Model
             $rtnCliente['results'][$i]['mD90']       = number_format($key['Dias90'],2,'.','');
             $rtnCliente['results'][$i]['mD120']      = number_format($key['Dias120'],2,'.','');
             $rtnCliente['results'][$i]['mMd120']       = number_format($key['Mas120'],2,'.','');
-            $rtnCliente['results'][$i]['mSaldo']        = number_format($key['SALDO'],2, '.', '');
-            $rtnCliente['results'][$i]['mLimite']       = number_format($key['LIMITE_CREDITO'],2, '.', '');
             $i++;
         }
         echo json_encode($rtnCliente);
@@ -75,8 +75,6 @@ class servicios_model extends CI_Model
             $rtnCliente['results'][$i]['mVentasActual']      = number_format($key['VentaEnValoresAct'],2,'.','');
             $rtnCliente['results'][$i]['mPromedioVenta3M']   = number_format($key['VentaEnValores3MAnt'],2,'.','');
             $rtnCliente['results'][$i]['mCantidadItems3M']   = number_format($key['NumItemFac3MAnt'],2,'.','');
-            $rtnCliente['results'][$i]['mCredito']           = number_format($key['DISPONIBLE'],2,'.','');
-            $rtnCliente['results'][$i]['mLimite']            = number_format($key['LIMITE_CREDITO'],2,'.','');
             $i++;
         }
         echo json_encode($rtnCliente);
@@ -88,7 +86,7 @@ class servicios_model extends CI_Model
         $rtnCliente=array();
         $query = $this->sqlsrv->fetchArray("SELECT CLIENTE,CONVERT(VARCHAR(50),FECHA,110) AS FECHA,FACTURA,SUM(TT_PUNTOS) AS TOTAL,RUTA FROM vtVS2_Facturas_CL WHERE RUTA = '".$Vendedor."'
                         GROUP BY FACTURA,FECHA,RUTA,CLIENTE",SQLSRV_FETCH_ASSOC);
-        foreach($query as $key){
+       foreach($query as $key){
             $Remanente = number_format($this->FacturaSaldo($key['FACTURA'],$key['TOTAL']),2,'.','');
             if (intval($Remanente) > 0.00 ) {
                 $rtnCliente['results'][$i]['mFecha']            = $key['FECHA'];
@@ -100,13 +98,15 @@ class servicios_model extends CI_Model
             }
             
         }
+
         echo json_encode($rtnCliente);
+
         $this->sqlsrv->close();
     }
     public function FacturaSaldo($id,$pts){        
         $this->db->where('Factura',$id);
         $this->db->select('Puntos');
-        $query = $this->db->get('rfactura');
+        $query = $this->db->get('visys.rfactura');
         if($query->num_rows() > 0){
             $parcial = $query->result_array()[0]['Puntos'];
         } else {
@@ -117,7 +117,7 @@ class servicios_model extends CI_Model
     public function LoginUsuario($usuario,$pass){
         $i=0;
         $rtnUsuario = array();
-        $link = @mysql_connect('localhost', 'root', 'a7m1425.')or die('No se pudo conectar: ' . mysql_error());            
+        $link = @mysql_connect('192.168.1.64:3306', 'Dios', 'a7m1425.')or die('No se pudo conectar: ' . mysql_error());
         mysql_select_db('gmv') or die('No se pudo seleccionar la base de datos');
         $query = "SELECT * FROM usuario WHERE Usuario = '".$usuario."' AND Password = '".$pass."'";
 
@@ -156,12 +156,11 @@ class servicios_model extends CI_Model
             $this->db->delete('PEDIDO', array('IDPEDIDO' => $key['mIdPedido']));
             $this->db->delete('PEDIDO_DETALLE', array('IDPEDIDO' => $key['mIdPedido']));
             
-            $consulta = $this->db->query('CALL SP_pedidos ("'.$key['mIdPedido'].'","'.$key['mVendedor'].'","'.$key['mCliente'].'",
-                                        "'.$key['mNombre'].'","'.$key['mFecha'].'","'.$key['mPrecio'].'","'.$key['mEstado'].'")');
+            $consulta = $this->db->query('CALL SP_pedidos ("'.$key['mIdPedido'].'","'.$key['mVendedor'].'","'.$key['mCliente'].'","'.$key['mNombre'].'","'.$key['mFecha'].'","'.$key['mPrecio'].'","'.$key['mEstado'].'")');
 
             for ($e=0; $e <(count($key['detalles']['nameValuePairs']))/6; $e++){
                
-                $consulta2 = $this->db->query('CALL SP_Detalle_pedidos 
+                 $this->db->query('CALL SP_Detalle_pedidos
                             ("'.$key['detalles']['nameValuePairs']['ID'.$i].'","'.$key['detalles']['nameValuePairs']['ARTICULO'.$i].'"
                             ,"'.$key['detalles']['nameValuePairs']['DESC'.$i].'","'.$key['detalles']['nameValuePairs']['CANT'.$i].'"
                             ,"'.$key['detalles']['nameValuePairs']['TOTAL'.$i].'","'.$key['detalles']['nameValuePairs']['BONI'.$i].'")');
