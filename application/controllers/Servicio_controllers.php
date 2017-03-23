@@ -26,6 +26,7 @@ class Servicio_controllers extends CI_Controller {
 	public function Puntos()
 	{
 		$this->servicios_model->Puntos($_POST['mVendedor']);
+
 	}
 	public function InsertCobros()
 	{
