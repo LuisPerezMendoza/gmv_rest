@@ -117,19 +117,19 @@ class servicios_model extends CI_Model
     public function LoginUsuario($usuario,$pass){
         $i=0;
         $rtnUsuario = array();
-        $link = @mysql_connect('localhost', 'root', 'a7m1425.')or die('No se pudo conectar: ' . mysql_error());            
-        mysql_select_db('gmv') or die('No se pudo seleccionar la base de datos');
-        $query = "SELECT * FROM usuario WHERE Usuario = '".$usuario."' AND Password = '".$pass."'";
-
-        $result = mysql_query($query) or die('Consulta fallida: '.mysql_error());
-        $key = mysql_fetch_array($result, MYSQL_ASSOC);
+        $this->db->where('Usuario',$usuario);
+        $this->db->where('Password',$pass);
+        $query = $this->db->get('usuario');
             
-        if (count($key)>1) {
-            $rtnUsuario['results'][$i]['mUsuario'] = $key['Usuario'];
-            $rtnUsuario['results'][$i]['mNombre'] = $key['Nombre'];
-            $rtnUsuario['results'][$i]['mIdUser'] = $key['IdUser']; 
+        if ($query->num_rows() > 0) {
+            foreach ($query->result_array() as $key) {
+                $rtnUsuario['results'][$i]['mUsuario'] = $key['Usuario'];
+                $rtnUsuario['results'][$i]['mNombre'] = $key['Nombre'];
+                $rtnUsuario['results'][$i]['mIdUser'] = $key['IdUser']; 
+                $rtnUsuario['results'][$i]['mPass'] = $key['Password']; 
+            }            
         }
-            echo json_encode($rtnUsuario);        
+        echo json_encode($rtnUsuario);
     }
   public function InsertCobros($json){
         foreach(json_decode($json, true) as $key){
@@ -138,7 +138,7 @@ class servicios_model extends CI_Model
                 'CLIENTE'     => $key['mCliente'],
                 'RUTA'        => $key['mRuta'],
                 'TIPO'        => $key['mTipo'],
-                'IMPORTE'        => $key['mImporte'],
+                'IMPORTE'     => $key['mImporte'],
                 'OBSERVACION' => $key['mObservacion'],
                 'FECHA'       => $key['mFecha']);
            $query = $this->db->insert('cobros', $Cobros);
@@ -157,26 +157,17 @@ class servicios_model extends CI_Model
             $this->db->delete('PEDIDO_DETALLE', array('IDPEDIDO' => $key['mIdPedido']));
             
             $consulta = $this->db->query('CALL SP_pedidos ("'.$key['mIdPedido'].'","'.$key['mVendedor'].'","'.$key['mCliente'].'",
-                                        "'.$key['mNombre'].'","'.$key['mFecha'].'","'.$key['mPrecio'].'","'.$key['mEstado'].'")');
+                                        "'.$key['mNombre'].'","'.$key['mFecha'].'","'.number_format($key['mPrecio'],2).'","'.$key['mEstado'].'")');
 
-            for ($e=0; $e <(count($key['detalles']['nameValuePairs']))/6; $e++){
-               
+            for ($e=0; $e <(count($key['detalles']['nameValuePairs']))/6; $e++){               
                 $consulta2 = $this->db->query('CALL SP_Detalle_pedidos 
                             ("'.$key['detalles']['nameValuePairs']['ID'.$i].'","'.$key['detalles']['nameValuePairs']['ARTICULO'.$i].'"
                             ,"'.$key['detalles']['nameValuePairs']['DESC'.$i].'","'.$key['detalles']['nameValuePairs']['CANT'.$i].'"
-                            ,"'.$key['detalles']['nameValuePairs']['TOTAL'.$i].'","'.$key['detalles']['nameValuePairs']['BONI'.$i].'")');
+                            ,"'.number_format($key['detalles']['nameValuePairs']['TOTAL'.$i],2).'","'.$key['detalles']['nameValuePairs']['BONI'.$i].'")');
                 $i++;
             }
         }
         echo json_encode($consulta);
     }    
 }
- /*$detalles = array(
-                    'IDPEDIDO' => $key['detalles']['nameValuePairs']['ID'.$i],
-                    'ARTICULO' => $key['detalles']['nameValuePairs']['ARTICULO'.$i],
-                    'DESCRIPCION' => $key['detalles']['nameValuePairs']['DESC'.$i],
-                    'CANTIDAD' => $key['detalles']['nameValuePairs']['CANT'.$i],
-                    'TOTAL' => $key['detalles']['nameValuePairs']['TOTAL'.$i],
-                    'BONIFICADO' => $key['detalles']['nameValuePairs']['BONI'.$i]
-                );*/
 ?>
