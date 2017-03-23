@@ -32,6 +32,10 @@ class Servicio_controllers extends CI_Controller {
 	{
 		$this->servicios_model->InsertCobros($_POST['pCobros']);
 	}
+	public function InsertVisitas()
+	{
+		$this->servicios_model->InsertVisitas($_POST['mVisitas']);
+	}
 	public function LoginUsuario()
 	{
 		$this->servicios_model->LoginUsuario($_POST['usuario'],$_POST['pass']);
