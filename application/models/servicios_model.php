@@ -147,6 +147,21 @@ class servicios_model extends CI_Model
         }
         echo json_encode($query);
     }
+    public function InsertVisitas($json){
+        foreach(json_decode($json, true) as $key){
+            $Visitas = array(
+                'IdPlan'       => $key['mIdPlan'],
+                'IdCliente'    => $key['mIdCliente'],
+                'Fecha'        => $key['mFecha'],
+                'Lati'         => $key['mLati'],
+                'Logi'         => $key['mLogi'],
+                'Local'        => $key['mLocal'],
+                'Observacion'  => $key['mObservacion'],
+                'Accion'       => $key['mAccion']);
+            $query = $this->db->insert('visitas', $Visitas);
+        }
+        echo json_encode($query);
+    }
 
     public function url_pedidos($Data)
     {
