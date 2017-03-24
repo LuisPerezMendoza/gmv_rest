@@ -176,7 +176,9 @@ class servicios_model extends CI_Model
             $consulta = $this->db->query('CALL SP_pedidos ("'.$key['mIdPedido'].'","'.$key['mVendedor'].'","'.$key['mCliente'].'",
                                         "'.$key['mNombre'].'","'.$key['mFecha'].'","'.number_format($key['mPrecio'],2).'","'.$key['mEstado'].'")');
 
-            for ($e=0; $e <(count($key['detalles']['nameValuePairs']))/6; $e++){               
+    
+          }
+           for ($e=0; $e <(count($key['detalles']['nameValuePairs']))/6; $e++){               
                 $consulta2 = $this->db->query('CALL SP_Detalle_pedidos 
                             ("'.$key['detalles']['nameValuePairs']['ID'.$i].'","'.$key['detalles']['nameValuePairs']['ARTICULO'.$i].'"
                             ,"'.$key['detalles']['nameValuePairs']['DESC'.$i].'","'.$key['detalles']['nameValuePairs']['CANT'.$i].'"
@@ -186,5 +188,29 @@ class servicios_model extends CI_Model
         }
         echo json_encode($consulta);
     }    
+public function Actividades()
+    {
+        $i=0;
+        $rtnActividad = array();
+        $link = @mysql_connect('localhost', 'root', 'a7m1425.')or die('No se pudo conectar: ' . mysql_error());
+        mysql_select_db('gmv') or die('No se pudo seleccionar la base de datos');
+        $query = "SELECT A.IDACTIVIDAD, A.ACTIVIDAD, A.IDCATEGORIA, C.CATEGORIA
+                  FROM ACTIVIDAD A INNER JOIN CATEGORIA C ON A.IDCATEGORIA=C.IDCATEGORIA
+                  ORDER BY C.CATEGORIA, A.ACTIVIDAD
+                 ";
+
+        $result = mysql_query($query,$link) or die('Consulta fallida: '.mysql_error());
+        //$key = mysql_fetch_array($result, MYSQL_ASSOC);
+        while ($row=mysql_fetch_array($result))
+        {
+            $rtnActividad['results'][$i]['mIdAE'] = $row['IDACTIVIDAD'];
+            $rtnActividad['results'][$i]['mCategoria'] = utf8_encode($row['CATEGORIA']);
+            $rtnActividad['results'][$i]['mActividad'] = utf8_encode($row['ACTIVIDAD']);
+         $i++;
+            //echo($row['IDACTIVIDAD']);
+        }
+       
+    }
+
 }
 ?>

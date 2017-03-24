@@ -13,6 +13,7 @@ $route['inVisitas'] = 'Servicio_controllers/InsertVisitas';
 $route['Login'] = 'Servicio_controllers/LoginUsuario';
 $route['url_pedidos'] = 'Servicio_controllers/url_pedidos';
 
+$route['Actividades'] = 'Servicio_controllers/Actividades';
 
 $route['pruebaJson'] = 'Servicio_controllers/pruebaJson';
 
