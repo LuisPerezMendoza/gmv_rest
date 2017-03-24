@@ -18,23 +18,28 @@ class Servicio_controllers extends CI_Controller {
 	}
 	public function ClientesMora()
 	{
-		$this->servicios_model->ClienteMora("F09");
+		$this->servicios_model->ClienteMora($_POST['mVendedor']);
 	}
 	public function ClientesIndicadores()
 	{
-		$this->servicios_model->ClienteIndicadores("F09");
+		$this->servicios_model->ClienteIndicadores($_POST['mVendedor']);
 	}
 	public function Clientes()
 	{
-		$this->servicios_model->Clientes("F09");
+		$this->servicios_model->Clientes($_POST['mVendedor']);
 	}
 	public function Puntos()
 	{
-		$this->servicios_model->Puntos("F09");
+		$this->servicios_model->Puntos($_POST['mVendedor']);
+
 	}
 	public function InsertCobros()
 	{
 		$this->servicios_model->InsertCobros($_POST['pCobros']);
+	}
+	public function InsertVisitas()
+	{
+		$this->servicios_model->InsertVisitas($_POST['mVisitas']);
 	}
 	public function LoginUsuario()
 	{
@@ -42,9 +47,7 @@ class Servicio_controllers extends CI_Controller {
 	}
 	public function url_pedidos()
 	{
-		$data = $this->input->post('data');
-		
-		$this->servicios_model->url_pedidos($data);
+		$this->servicios_model->url_pedidos($_POST['PEDIDOS']);
 	}
 
 }
