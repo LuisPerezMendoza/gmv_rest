@@ -185,7 +185,7 @@ class servicios_model extends CI_Model
                             ,"'.number_format($key['detalles']['nameValuePairs']['TOTAL'.$i],2).'","'.$key['detalles']['nameValuePairs']['BONI'.$i].'")');
                 $i++;
             }
-        }
+
         echo json_encode($consulta);
     }    
 public function Actividades()
