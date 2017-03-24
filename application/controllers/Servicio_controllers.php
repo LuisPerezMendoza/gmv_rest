@@ -7,6 +7,11 @@ class Servicio_controllers extends CI_Controller {
 	{
 		//$this->load->view('welcome_message');
 	}
+	public function Actividades()
+	{
+		//echo("123");
+		$this->servicios_model->Actividades();
+	}
 	public function articulos()
 	{
 		$this->servicios_model->Articulos();
@@ -41,4 +46,5 @@ class Servicio_controllers extends CI_Controller {
 		
 		$this->servicios_model->url_pedidos($data);
 	}
+
 }

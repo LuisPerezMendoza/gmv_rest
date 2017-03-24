@@ -152,5 +152,35 @@ class servicios_model extends CI_Model
         $this->db->insert('PEDIDO',$arrayName);
 
     
-}}
+}
+    public function Actividades()
+    {
+        $i=0;
+        $rtnActividad = array();
+        $link = @mysql_connect('localhost', 'root', 'a7m1425.')or die('No se pudo conectar: ' . mysql_error());
+        mysql_select_db('gmv') or die('No se pudo seleccionar la base de datos');
+        $query = "SELECT A.IDACTIVIDAD, A.ACTIVIDAD, A.IDCATEGORIA, C.CATEGORIA
+                  FROM ACTIVIDAD A INNER JOIN CATEGORIA C ON A.IDCATEGORIA=C.IDCATEGORIA
+                  ORDER BY C.CATEGORIA, A.ACTIVIDAD
+                 ";
+
+        $result = mysql_query($query,$link) or die('Consulta fallida: '.mysql_error());
+        //$key = mysql_fetch_array($result, MYSQL_ASSOC);
+        while ($row=mysql_fetch_array($result))
+        {
+            $rtnActividad['results'][$i]['mIdAE'] = $row['IDACTIVIDAD'];
+            $rtnActividad['results'][$i]['mCategoria'] = utf8_encode($row['CATEGORIA']);
+            $rtnActividad['results'][$i]['mActividad'] = utf8_encode($row['ACTIVIDAD']);
+/*            $rtnActividad['results'][$i]['mIdActividad'] = $row['IDACTIVIDAD'];
+            $rtnActividad['results'][$i]['mActividad'] = utf8_encode($row['ACTIVIDAD']);
+            $rtnActividad['results'][$i]['mIdCategoria'] = $row['IDCATEGORIA'];
+            $rtnActividad['results'][$i]['mCategoria'] = utf8_encode($row['CATEGORIA']);
+*/
+            $i++;
+            //echo($row['IDACTIVIDAD']);
+        }
+        echo json_encode($rtnActividad);
+    }
+
+}
 ?>
