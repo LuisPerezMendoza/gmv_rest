@@ -174,7 +174,8 @@ class servicios_model extends CI_Model
             $this->db->delete('PEDIDO_DETALLE', array('IDPEDIDO' => $key['mIdPedido']));
             
             $consulta = $this->db->query('CALL SP_pedidos ("'.$key['mIdPedido'].'","'.$key['mVendedor'].'","'.$key['mCliente'].'",
-                                        "'.$key['mNombre'].'","'.$key['mFecha'].'","'.number_format($key['mPrecio'],2).'","'.$key['mEstado'].'")');
+                                        "'.$key['mNombre'].'","'.$key['mFecha'].'","'.$key['mPrecio'].'","'.$key['mEstado'].'")');
+
 
             for ($e=0; $e <(count($key['detalles']['nameValuePairs']))/6; $e++){               
                 $consulta2 = $this->db->query('CALL SP_Detalle_pedidos 
