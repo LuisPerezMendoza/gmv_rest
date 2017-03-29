@@ -44,4 +44,8 @@ class Servicio_controllers extends CI_Controller {
 	{
 		$this->servicios_model->url_pedidos($_POST['PEDIDOS']);
 	}
+	public function updatePedidos()
+	{
+		$this->servicios_model->updatePedidos($_POST['PEDIDOS']);
+	}
 }
