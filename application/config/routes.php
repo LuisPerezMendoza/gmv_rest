@@ -14,6 +14,7 @@ $route['Login'] = 'Servicio_controllers/LoginUsuario';
 $route['url_pedidos'] = 'Servicio_controllers/url_pedidos';
 $route['updatePedidos'] = 'Servicio_controllers/updatePedidos';
 
+$route['Actividades'] = 'Servicio_controllers/Actividades';
 
 $route['pruebaJson'] = 'Servicio_controllers/pruebaJson';
 
