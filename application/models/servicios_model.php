@@ -185,32 +185,30 @@ class servicios_model extends CI_Model
                             ,"'.number_format($key['detalles']['nameValuePairs']['TOTAL'.$i],2).'","'.$key['detalles']['nameValuePairs']['BONI'.$i].'")');
                 $i++;
             }
-        }
         echo json_encode($consulta);
-    }    
-public function Actividades()
+        }
+    public function Actividades()
     {
         $i=0;
         $rtnActividad = array();
-        $link = @mysql_connect('localhost', 'root', 'a7m1425.')or die('No se pudo conectar: ' . mysql_error());
-        mysql_select_db('gmv') or die('No se pudo seleccionar la base de datos');
-        $query = "SELECT A.IDACTIVIDAD, A.ACTIVIDAD, A.IDCATEGORIA, C.CATEGORIA
-                  FROM ACTIVIDAD A INNER JOIN CATEGORIA C ON A.IDCATEGORIA=C.IDCATEGORIA
-                  ORDER BY C.CATEGORIA, A.ACTIVIDAD
-                 ";
+        //$this->db->select("A.IDACTIVIDAD, A.ACTIVIDAD, A.IDCATEGORIA, C.CATEGORIA ");
+        //$this->db->from("ACTIVIDAD A");
+        //$this->db->join("CATEGORIA C", "A.IDCATEGORIA=C.IDCATEGORIA");
+        $query=$this->db->get('actividades');
 
-        $result = mysql_query($query,$link) or die('Consulta fallida: '.mysql_error());
-        //$key = mysql_fetch_array($result, MYSQL_ASSOC);
-        while ($row=mysql_fetch_array($result))
+        if ($query->num_rows()>0)
         {
-            $rtnActividad['results'][$i]['mIdAE'] = $row['IDACTIVIDAD'];
-            $rtnActividad['results'][$i]['mCategoria'] = utf8_encode($row['CATEGORIA']);
-            $rtnActividad['results'][$i]['mActividad'] = utf8_encode($row['ACTIVIDAD']);
-         $i++;
-            //echo($row['IDACTIVIDAD']);
+            foreach ($query->result_array() as $key)
+            {
+                $rtnActividad['results'][$i]['mIdAE'] = $key['IDACTIVIDAD'];
+                $rtnActividad['results'][$i]['mCategoria'] = utf8_encode($key['CATEGORIA']);
+                $rtnActividad['results'][$i]['mActividad'] = utf8_encode($key['ACTIVIDAD']);
+                $i++;
+            }
         }
-       
+        echo json_encode($rtnActividad);
     }
+
 
 }
 ?>
