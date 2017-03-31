@@ -50,6 +50,6 @@ class Servicio_controllers extends CI_Controller {
 	}
 	public function updatePedidos()
 	{
-		$this->servicios_model->updatePedidos($_POST['PEDIDOS']);
+		$this->servicios_model->updatePedidos($_GET['PEDIDOS']);
 	}
 }

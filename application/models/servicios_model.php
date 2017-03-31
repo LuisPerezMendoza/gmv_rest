@@ -187,7 +187,8 @@ class servicios_model extends CI_Model
             }
 
         echo json_encode($consulta);
-        }   
+        }
+    }
     public function updatePedidos($Post)
     {
         $i = 0;
@@ -205,7 +206,8 @@ class servicios_model extends CI_Model
             }
         }
         echo json_encode($rtnPedido);
-    }   
+    }
+
 public function Actividades()
     {
         $i=0;
