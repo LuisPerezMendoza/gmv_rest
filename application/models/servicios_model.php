@@ -170,24 +170,43 @@ class servicios_model extends CI_Model
         $consulta = "";
         foreach(json_decode($Data, true) as $key){
 
-            $this->db->delete('PEDIDO', array('IDPEDIDO' => $key['mIdPedido']));
+            //$this->db->delete('PEDIDO', array('IDPEDIDO' => $key['mIdPedido']));
             $this->db->delete('PEDIDO_DETALLE', array('IDPEDIDO' => $key['mIdPedido']));
             
             $consulta = $this->db->query('CALL SP_pedidos ("'.$key['mIdPedido'].'","'.$key['mVendedor'].'","'.$key['mCliente'].'",
-                                        "'.$key['mNombre'].'","'.$key['mFecha'].'","'.number_format($key['mPrecio'],2).'","'.$key['mEstado'].'")');
+                                        "'.$key['mNombre'].'","'.$key['mFecha'].'","'.$key['mPrecio'].'","'.$key['mEstado'].'")');
 
-    
-          }
-           for ($e=0; $e <(count($key['detalles']['nameValuePairs']))/6; $e++){               
+
+
+           for ($e=0; $e <(count($key['detalles']['nameValuePairs']))/6; $e++){
                 $consulta2 = $this->db->query('CALL SP_Detalle_pedidos 
                             ("'.$key['detalles']['nameValuePairs']['ID'.$i].'","'.$key['detalles']['nameValuePairs']['ARTICULO'.$i].'"
                             ,"'.$key['detalles']['nameValuePairs']['DESC'.$i].'","'.$key['detalles']['nameValuePairs']['CANT'.$i].'"
                             ,"'.number_format($key['detalles']['nameValuePairs']['TOTAL'.$i],2).'","'.$key['detalles']['nameValuePairs']['BONI'.$i].'")');
                 $i++;
             }
+
         echo json_encode($consulta);
+        }   
+    public function updatePedidos($Post)
+    {
+        $i = 0;
+        $rtnPedido = array();
+        foreach(json_decode($Post, true) as $key){
+            $this->db->where('IDPEDIDO',$key['mIdPedido']);
+            $this->db->select('IDPEDIDO,ESTADO');
+            $query = $this->db->get('pedido');
+            if ($query->num_rows()>0) {
+                foreach ($query->result_array() as $key) {
+                    $rtnPedido['results'][$i]['mIdPedido']  = $key['IDPEDIDO'];
+                    $rtnPedido['results'][$i]['mEstado']    = $key['ESTADO'];
+                    $i++;
+                }
+            }
         }
-    public function Actividades()
+        echo json_encode($rtnPedido);
+    }   
+public function Actividades()
     {
         $i=0;
         $rtnActividad = array();
@@ -208,7 +227,5 @@ class servicios_model extends CI_Model
         }
         echo json_encode($rtnActividad);
     }
-
-
 }
 ?>
